@@ -44,13 +44,12 @@ class Config(metaclass=Singleton):
         logger.info("Config loading done.")
         self.global_proxy = self._get("GLOBAL_PROXY")
         self.openai_api_key = self._get("OPENAI_API_KEY")
-        if not self.openai_api_key or "YOUR_API_KEY" == self.openai_api_key:
+        if not self.openai_api_key or self.openai_api_key == "YOUR_API_KEY":
             raise NotConfiguredException("Set OPENAI_API_KEY first")
 
         self.openai_api_base = self._get("OPENAI_API_BASE")
-        if not self.openai_api_base or "YOUR_API_BASE" == self.openai_api_base:
-            openai_proxy = self._get("OPENAI_PROXY") or self.global_proxy
-            if openai_proxy:
+        if not self.openai_api_base or self.openai_api_base == "YOUR_API_BASE":
+            if openai_proxy := self._get("OPENAI_PROXY") or self.global_proxy:
                 openai.proxy = openai_proxy
             else:
                 logger.info("Set OPENAI_API_BASE in case of network issues")
@@ -67,11 +66,11 @@ class Config(metaclass=Singleton):
         self.google_api_key = self._get("GOOGLE_API_KEY")
         self.google_cse_id = self._get("GOOGLE_CSE_ID")
         self.search_engine = self._get("SEARCH_ENGINE", SearchEngineType.SERPAPI_GOOGLE)
- 
+
         self.web_browser_engine = WebBrowserEngineType(self._get("WEB_BROWSER_ENGINE", "playwright"))
         self.playwright_browser_type = self._get("PLAYWRIGHT_BROWSER_TYPE", "chromium")
         self.selenium_browser_type = self._get("SELENIUM_BROWSER_TYPE", "chrome")
-      
+
         self.long_term_memory = self._get('LONG_TERM_MEMORY', False)
         if self.long_term_memory:
             logger.warning("LONG_TERM_MEMORY is True")
@@ -86,7 +85,7 @@ class Config(metaclass=Singleton):
 
     def _init_with_config_files_and_env(self, configs: dict, yaml_file):
         """从config/key.yaml / config/config.yaml / env三处按优先级递减加载"""
-        configs.update(os.environ)
+        configs |= os.environ
 
         for _yaml_file in [yaml_file, self.key_yaml_file]:
             if not _yaml_file.exists():
@@ -97,8 +96,8 @@ class Config(metaclass=Singleton):
                 yaml_data = yaml.safe_load(file)
                 if not yaml_data:
                     continue
-                os.environ.update({k: v for k, v in yaml_data.items() if isinstance(v, str)})
-                configs.update(yaml_data)
+                os.environ |= {k: v for k, v in yaml_data.items() if isinstance(v, str)}
+                configs |= yaml_data
 
     def _get(self, *args, **kwargs):
         return self._configs.get(*args, **kwargs)

@@ -33,5 +33,4 @@ class AnalyzeDepLibs(Action):
     async def run(self, requirement, filepaths_string):
         # prompt = f"以下是产品需求文档(PRD):\n\n{prd}\n\n{PROMPT}"
         prompt = PROMPT.format(prompt=requirement, filepaths_string=filepaths_string)
-        design_filenames = await self._aask(prompt)
-        return design_filenames
+        return await self._aask(prompt)

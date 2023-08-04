@@ -31,8 +31,7 @@ def columns_to_milvus_schema(columns: dict, primary_col_name: str = "", desc: st
         else:
             mcol = FieldSchema(name=col, dtype=type_mapping[ctype], is_primary=(col == primary_col_name))
         fields.append(mcol)
-    schema = CollectionSchema(fields, description=desc)
-    return schema
+    return CollectionSchema(fields, description=desc)
 
 
 class MilvusConnection(TypedDict):
@@ -52,14 +51,13 @@ class MilvusStore(BaseStore):
         self.collection = None
 
     def _create_collection(self, name, schema):
-        collection = Collection(
+        return Collection(
             name=name,
             schema=schema,
             using='default',
             shards_num=2,
-            consistency_level="Strong"
+            consistency_level="Strong",
         )
-        return collection
 
     def create_collection(self, name, columns):
         schema = columns_to_milvus_schema(columns, 'idx')
@@ -83,16 +81,14 @@ class MilvusStore(BaseStore):
         注意到上述描述，这个逻辑是认真的吗？这个耗时应该很长？
         """
         search_params = {"metric_type": "L2", "params": {"nprobe": 10}}
-        results = self.collection.search(
+        return self.collection.search(
             data=query,
             anns_field=kwargs.get('field', 'emb'),
             param=search_params,
             limit=10,
             expr=None,
-            consistency_level="Strong"
+            consistency_level="Strong",
         )
-        # FIXME: results里有id，但是id到实际值还得调用query接口来获取
-        return results
 
     def write(self, name, schema, *args, **kwargs):
         """

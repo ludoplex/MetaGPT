@@ -69,8 +69,6 @@ def test_actionoutout_schema_to_mapping():
     mapping = actionoutout_schema_to_mapping(schema)
     assert mapping['field'] == (List[Tuple[str, str]], ...)
 
-    assert True, True
-
 
 def test_serialize_and_deserialize_message():
     out_mapping = {

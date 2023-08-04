@@ -114,7 +114,7 @@ class UTGenerator:
         self.swagger_file = swagger_file
         self.ut_py_path = ut_py_path
         self.questions_path = questions_path
-        assert chatgpt_method in ["API"], "非法chatgpt_method"
+        assert chatgpt_method in {"API"}, "非法chatgpt_method"
         self.chatgpt_method = chatgpt_method
 
         # ICL: In-Context Learning，这里给出例子，要求GPT模仿例子
@@ -271,11 +271,7 @@ class UTGenerator:
 
     def gpt_msgs_to_code(self, messages: list) -> str:
         """根据不同调用方式选择"""
-        result = ''
-        if self.chatgpt_method == "API":
-            result = GPTAPI().ask_code(msgs=messages)
-
-        return result
+        return GPTAPI().ask_code(msgs=messages) if self.chatgpt_method == "API" else ''
 
     def get_file_path(self, base: Path, fname: str):
         """保存不同的文件路径

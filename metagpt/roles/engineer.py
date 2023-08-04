@@ -59,13 +59,13 @@ class Engineer(Role):
         self.n_borg = n_borg
 
     @classmethod
-    def parse_tasks(self, task_msg: Message) -> list[str]:
+    def parse_tasks(cls, task_msg: Message) -> list[str]:
         if not task_msg.instruct_content:
             return task_msg.instruct_content.dict().get("Task list")
         return CodeParser.parse_file_list(block="Task list", text=task_msg.content)
 
     @classmethod
-    def parse_code(self, code_text: str) -> str:
+    def parse_code(cls, code_text: str) -> str:
         return CodeParser.parse_code(block="", text=code_text)
 
     @classmethod
@@ -151,10 +151,8 @@ class Engineer(Role):
             3. 是否需要其他代码（暂时需要）？
             TODO:目标是不需要。在任务拆分清楚后，根据设计思路，不需要其他代码也能够写清楚单个文件，如果不能则表示还需要在定义的更清晰，这个是代码能够写长的关键
             """
-            context = []
             msg = self._rc.memory.get_by_actions([WriteDesign, WriteTasks, WriteCode])
-            for m in msg:
-                context.append(m.content)
+            context = [m.content for m in msg]
             context_str = "\n".join(context)
             # 编写code
             code = await WriteCode().run(
@@ -172,7 +170,6 @@ class Engineer(Role):
                     code = rewrite_code
                 except Exception as e:
                     logger.error("code review failed!", e)
-                    pass
             self.write_file(todo, code)
             msg = Message(content=code, role=self.profile, cause_by=WriteCode)
             self._rc.memory.add(msg)

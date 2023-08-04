@@ -23,5 +23,4 @@ class WritePRDReview(Action):
     async def run(self, prd):
         self.prd = prd
         prompt = self.prd_review_prompt_template.format(prd=self.prd)
-        review = await self._aask(prompt)
-        return review
+        return await self._aask(prompt)

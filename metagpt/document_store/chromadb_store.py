@@ -17,14 +17,12 @@ class ChromaStore:
         self.collection = collection
 
     def search(self, query, n_results=2, metadata_filter=None, document_filter=None):
-        # kwargs can be used for optional filtering
-        results = self.collection.query(
+        return self.collection.query(
             query_texts=[query],
             n_results=n_results,
             where=metadata_filter,  # optional filter
-            where_document=document_filter  # optional filter
+            where_document=document_filter,  # optional filter
         )
-        return results
 
     def persist(self):
         """chroma建议使用server模式，不本地persist"""

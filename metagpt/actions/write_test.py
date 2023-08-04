@@ -22,5 +22,4 @@ class WriteTest(Action):
     async def run(self, code):
         self.code = code
         prompt = self.test_prompt_template.format(code=self.code)
-        test_cases = await self._aask(prompt)
-        return test_cases
+        return await self._aask(prompt)

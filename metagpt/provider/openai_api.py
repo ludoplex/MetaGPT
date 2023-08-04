@@ -171,25 +171,25 @@ class OpenAIGPTAPI(BaseGPTAPI, RateLimiter):
         return full_reply_content
 
     def _cons_kwargs(self, messages: list[dict]) -> dict:
-        if CONFIG.openai_api_type == 'azure':
-            kwargs = {
+        return (
+            {
                 "deployment_id": CONFIG.deployment_id,
                 "messages": messages,
                 "max_tokens": CONFIG.max_tokens_rsp,
                 "n": 1,
                 "stop": None,
-                "temperature": 0.3
+                "temperature": 0.3,
             }
-        else:
-            kwargs = {
+            if CONFIG.openai_api_type == 'azure'
+            else {
                 "model": self.model,
                 "messages": messages,
                 "max_tokens": CONFIG.max_tokens_rsp,
                 "n": 1,
                 "stop": None,
-                "temperature": 0.3
+                "temperature": 0.3,
             }
-        return kwargs
+        )
 
     async def _achat_completion(self, messages: list[dict]) -> dict:
         rsp = await self.llm.ChatCompletion.acreate(**self._cons_kwargs(messages))

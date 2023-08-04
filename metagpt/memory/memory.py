@@ -66,11 +66,7 @@ class Memory:
     def remember(self, observed: list[Message], k=10) -> list[Message]:
         """remember the most recent k memories from observed Messages, return all when k=0"""
         already_observed = self.get(k)
-        news: list[Message] = []
-        for i in observed:
-            if i in already_observed:
-                continue
-            news.append(i)
+        news: list[Message] = [i for i in observed if i not in already_observed]
         return news
 
     def get_by_action(self, action: Type[Action]) -> list[Message]:

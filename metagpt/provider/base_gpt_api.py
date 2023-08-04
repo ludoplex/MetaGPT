@@ -71,13 +71,11 @@ class BaseGPTAPI(BaseChatbot):
 
     def ask_code(self, msgs: list[str]) -> str:
         """FIXME: No code segment filtering has been done here, and all results are actually displayed"""
-        rsp_text = self.ask_batch(msgs)
-        return rsp_text
+        return self.ask_batch(msgs)
 
     async def aask_code(self, msgs: list[str]) -> str:
         """FIXME: No code segment filtering has been done here, and all results are actually displayed"""
-        rsp_text = await self.aask_batch(msgs)
-        return rsp_text
+        return await self.aask_batch(msgs)
 
     @abstractmethod
     def completion(self, messages: list[dict]):

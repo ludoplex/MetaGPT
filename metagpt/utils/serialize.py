@@ -33,7 +33,7 @@ def actionoutout_schema_to_mapping(schema: Dict) -> Dict:
     }
     ```
     """
-    mapping = dict()
+    mapping = {}
     for field, property in schema['properties'].items():
         if property['type'] == 'string':
             mapping[field] = (str, ...)
@@ -47,8 +47,7 @@ def actionoutout_schema_to_mapping(schema: Dict) -> Dict:
 
 def serialize_message(message: Message):
     message_cp = copy.deepcopy(message)  # avoid `instruct_content` value update by reference
-    ic = message_cp.instruct_content
-    if ic:
+    if ic := message_cp.instruct_content:
         # model create by pydantic create_model like `pydantic.main.prd`, can't pickle.dump directly
         schema = ic.schema()
         mapping = actionoutout_schema_to_mapping(schema)
@@ -58,9 +57,7 @@ def serialize_message(message: Message):
             'mapping': mapping,
             'value': ic.dict()
         }
-    msg_ser = pickle.dumps(message_cp)
-
-    return msg_ser
+    return pickle.dumps(message_cp)
 
 
 def deserialize_message(message_ser: str) -> Message:

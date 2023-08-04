@@ -52,8 +52,7 @@ async def test_faiss_store_search():
 def customer_service():
     store = FaissStore(DATA_PATH / "st/faq.xlsx", content_col="Question", meta_col="Answer")
     store.search = functools.partial(store.search, expand_cols=True)
-    role = CustomerService(profile="小爽人工", desc=DESC, store=store)
-    return role
+    return CustomerService(profile="小爽人工", desc=DESC, store=store)
 
 
 @pytest.mark.asyncio

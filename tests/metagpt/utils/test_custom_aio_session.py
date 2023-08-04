@@ -11,8 +11,7 @@ from metagpt.provider.openai_api import OpenAIGPTAPI
 
 async def try_hello(api):
     batch = [[{'role': 'user', 'content': 'hello'}]]
-    results = await api.acompletion_batch_text(batch)
-    return results
+    return await api.acompletion_batch_text(batch)
 
 
 async def aask_batch(api: OpenAIGPTAPI):

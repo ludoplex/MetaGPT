@@ -24,20 +24,20 @@ def validate_cols(content_col: str, df: pd.DataFrame):
 
 def read_data(data_path: Path):
     suffix = data_path.suffix
-    if '.xlsx' == suffix:
+    if suffix == '.xlsx':
         data = pd.read_excel(data_path)
-    elif '.csv' == suffix:
+    elif suffix == '.csv':
         data = pd.read_csv(data_path)
-    elif '.json' == suffix:
+    elif suffix == '.json':
         data = pd.read_json(data_path)
     elif suffix in ('.docx', '.doc'):
         data = UnstructuredWordDocumentLoader(str(data_path), mode='elements').load()
-    elif '.txt' == suffix:
+    elif suffix == '.txt':
         data = TextLoader(str(data_path)).load()
         text_splitter = CharacterTextSplitter(separator='\n', chunk_size=256, chunk_overlap=0)
         texts = text_splitter.split_documents(data)
         data = texts
-    elif '.pdf' == suffix:
+    elif suffix == '.pdf':
         data = UnstructuredPDFLoader(str(data_path), mode="elements").load()
     else:
         raise NotImplementedError

@@ -5,6 +5,7 @@
 @Author  : alexanderwu
 @File    : test_milvus_store.py
 """
+
 import random
 
 import numpy as np
@@ -14,7 +15,7 @@ from metagpt.logs import logger
 
 book_columns = {'idx': int, 'name': str, 'desc': str, 'emb': np.ndarray, 'price': float}
 book_data = [
-    [i for i in range(10)],
+    list(range(10)),
     [f"book-{i}" for i in range(10)],
     [f"book-desc-{i}" for i in range(10000, 10010)],
     [[random.random() for _ in range(2)] for _ in range(10)],

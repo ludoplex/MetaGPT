@@ -57,7 +57,7 @@ def proxy():
         data = await reader.readuntil(b"\r\n\r\n")
         print(f"Proxy: {data}")  # checking with capfd fixture
         infos = pattern.match(data)
-        host, port = infos.group("host"), infos.group("port")
+        host, port = infos["host"], infos["port"]
         port = int(port) if port else 80
         remote_reader, remote_writer = await asyncio.open_connection(host, port)
         if data.startswith(b"CONNECT"):

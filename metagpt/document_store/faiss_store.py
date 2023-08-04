@@ -37,8 +37,11 @@ class FaissStore(LocalStore):
         return store
 
     def _write(self, docs, metadatas):
-        store = FAISS.from_texts(docs, OpenAIEmbeddings(openai_api_version="2020-11-07"), metadatas=metadatas)
-        return store
+        return FAISS.from_texts(
+            docs,
+            OpenAIEmbeddings(openai_api_version="2020-11-07"),
+            metadatas=metadatas,
+        )
 
     def persist(self):
         index_file, store_file = self._get_index_and_store_fname()

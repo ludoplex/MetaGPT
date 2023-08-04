@@ -114,14 +114,11 @@ def safe_google_results(results: str | list) -> str:
     Returns:
         str: The results of the search.
     """
-    if isinstance(results, list):
-        safe_message = json.dumps(
-            # FIXME: # .encode("utf-8", "ignore") 这里去掉了，但是AutoGPT里有，很奇怪
-            [result for result in results]
-        )
-    else:
-        safe_message = results.encode("utf-8", "ignore").decode("utf-8")
-    return safe_message
+    return (
+        json.dumps(list(results))
+        if isinstance(results, list)
+        else results.encode("utf-8", "ignore").decode("utf-8")
+    )
 
 
 if __name__ == '__main__':

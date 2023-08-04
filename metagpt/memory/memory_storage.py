@@ -39,12 +39,11 @@ class MemoryStorage(FaissStore):
 
         self.store = self._load()
         messages = []
-        if not self.store:
-            # TODO init `self.store` under here with raw faiss api instead under `add`
-            pass
-        else:
-            for _id, document in self.store.docstore._dict.items():
-                messages.append(deserialize_message(document.metadata.get("message_ser")))
+        if self.store:
+            messages.extend(
+                deserialize_message(document.metadata.get("message_ser"))
+                for _id, document in self.store.docstore._dict.items()
+            )
             self._initialized = True
 
         return messages

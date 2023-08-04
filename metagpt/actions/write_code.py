@@ -69,13 +69,9 @@ class WriteCode(Action):
     @retry(stop=stop_after_attempt(2), wait=wait_fixed(1))
     async def write_code(self, prompt):
         code_rsp = await self._aask(prompt)
-        code = CodeParser.parse_code(block="", text=code_rsp)
-        return code
+        return CodeParser.parse_code(block="", text=code_rsp)
 
     async def run(self, context, filename):
         prompt = PROMPT_TEMPLATE.format(context=context, filename=filename)
         logger.info(f'Writing {filename}..')
-        code = await self.write_code(prompt)
-        # code_rsp = await self._aask_v1(prompt, "code_rsp", OUTPUT_MAPPING)
-        # self._save(context, filename, code)
-        return code
+        return await self.write_code(prompt)

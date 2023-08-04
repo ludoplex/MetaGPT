@@ -74,8 +74,9 @@ class PlaywrightWrapper:
             await _install_browsers(self.browser_type, **kwargs)
             if not executable_path.exists():
                 parts = executable_path.parts
-                available_paths = list(Path(*parts[:-3]).glob(f"{self.browser_type}-*"))
-                if available_paths:
+                if available_paths := list(
+                    Path(*parts[:-3]).glob(f"{self.browser_type}-*")
+                ):
                     logger.warning(
                         "It seems that your OS is not officially supported by Playwright. "
                         "Try to set executable_path to the fallback build version."
@@ -101,9 +102,9 @@ async def _install_browsers(*browsers, **kwargs) -> None:
     await asyncio.gather(_log_stream(process.stdout, logger.info), _log_stream(process.stderr, logger.warning))
 
     if await process.wait() == 0:
-        logger.info(f"Install browser for playwright successfully.")
+        logger.info("Install browser for playwright successfully.")
     else:
-        logger.warning(f"Fail to install browser for playwright.")
+        logger.warning("Fail to install browser for playwright.")
 
 
 async def _log_stream(sr, log_func):

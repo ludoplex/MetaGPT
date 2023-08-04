@@ -163,14 +163,14 @@ def parse(func):
         context, pattern = func(*args, **kwargs)
         match = re.search(pattern, context, re.DOTALL)
         if match:
-            text_info = match.group(1)
+            text_info = match[1]
             logger.info(text_info)
         else:
             text_info = context
             logger.info("未找到匹配的内容")
-        
+
         return text_info
-    
+
     return wrapper
 
 
@@ -211,7 +211,9 @@ class UIDesign(Action):
         prompts_batch = []
         for icon_prompt in icons:
             # fixme: 添加icon lora
-            prompt = engine.construct_payload(icon_prompt + ".<lora:WZ0710_AW81e-3_30e3b128d64T32_goon0.5>")
+            prompt = engine.construct_payload(
+                f"{icon_prompt}.<lora:WZ0710_AW81e-3_30e3b128d64T32_goon0.5>"
+            )
             prompts_batch.append(prompt)
         await engine.run_t2i(prompts_batch)
         logger.info("Finish icon design using StableDiffusion API")
@@ -221,9 +223,9 @@ class UIDesign(Action):
         if not os.path.exists(save_dir):
             os.makedirs(save_dir, exist_ok=True)
         # Save CSS and HTML content to files
-        css_file_path = save_dir / f"ui_design.css"
-        html_file_path = save_dir / f"ui_design.html"
-        
+        css_file_path = save_dir / "ui_design.css"
+        html_file_path = save_dir / "ui_design.html"
+
         with open(css_file_path, 'w') as css_file:
             css_file.write(css_content)
         with open(html_file_path, 'w') as html_file:

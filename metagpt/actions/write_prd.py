@@ -142,5 +142,4 @@ class WritePRD(Action):
         prompt = PROMPT_TEMPLATE.format(requirements=requirements, search_information=info,
                                         format_example=FORMAT_EXAMPLE)
         logger.debug(prompt)
-        prd = await self._aask_v1(prompt, "prd", OUTPUT_MAPPING)
-        return prd
+        return await self._aask_v1(prompt, "prd", OUTPUT_MAPPING)

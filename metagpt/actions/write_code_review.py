@@ -68,8 +68,7 @@ class WriteCodeReview(Action):
     @retry(stop=stop_after_attempt(2), wait=wait_fixed(1))
     async def write_code(self, prompt):
         code_rsp = await self._aask(prompt)
-        code = CodeParser.parse_code(block="", text=code_rsp)
-        return code
+        return CodeParser.parse_code(block="", text=code_rsp)
 
     async def run(self, context, code, filename):
         format_example = FORMAT_EXAMPLE.format(filename=filename)

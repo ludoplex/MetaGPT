@@ -41,13 +41,12 @@ def mermaid_to_file(mermaid_code, output_file_without_suffix, width=2048, height
         if IS_DOCKER == 'true':
             subprocess.run(['mmdc', '-p', '/app/metagpt/config/puppeteer-config.json', '-i',
                            str(tmp), '-o', output_file, '-w', str(width), '-H', str(height)])
+        elif CONFIG.puppeteer_config:
+            subprocess.run([CONFIG.mmdc, '-p', CONFIG.puppeteer_config, '-i', str(tmp), '-o',
+                            output_file, '-w', str(width), '-H', str(height)])
         else:
-            if CONFIG.puppeteer_config:
-                subprocess.run([CONFIG.mmdc, '-p', CONFIG.puppeteer_config, '-i', str(tmp), '-o',
-                                output_file, '-w', str(width), '-H', str(height)])
-            else:
-                subprocess.run([CONFIG.mmdc, '-i', str(tmp), '-o',
-                                output_file, '-w', str(width), '-H', str(height)])
+            subprocess.run([CONFIG.mmdc, '-i', str(tmp), '-o',
+                            output_file, '-w', str(width), '-H', str(height)])
     return 0
 
 

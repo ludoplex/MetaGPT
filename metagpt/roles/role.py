@@ -107,10 +107,7 @@ class Role:
     def _init_actions(self, actions):
         self._reset()
         for idx, action in enumerate(actions):
-            if not isinstance(action, Action):
-                i = action("")
-            else:
-                i = action
+            i = action("") if not isinstance(action, Action) else action
             i.set_prefix(self._get_prefix(), self.profile)
             self._actions.append(i)
             self._states.append(f"{idx}. {action}")
@@ -181,16 +178,15 @@ class Role:
         if not self._rc.env:
             return 0
         env_msgs = self._rc.env.memory.get()
-        
+
         observed = self._rc.env.memory.get_by_actions(self._rc.watch)
-        
+
         news = self._rc.memory.remember(observed)  # remember recent exact or similar memories
 
         for i in env_msgs:
             self.recv(i)
 
-        news_text = [f"{i.role}: {i.content[:20]}..." for i in news]
-        if news_text:
+        if news_text := [f"{i.role}: {i.content[:20]}..." for i in news]:
             logger.debug(f'{self._setting} observed: {news_text}')
         return len(news)
 

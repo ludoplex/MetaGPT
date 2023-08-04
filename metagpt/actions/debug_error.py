@@ -14,6 +14,5 @@ class DebugError(Action):
 
     async def run(self, code, error):
         prompt = f"Here is a piece of Python code:\n\n{code}\n\nThe following error occurred during execution:" \
-                 f"\n\n{error}\n\nPlease try to fix the error in this code."
-        fixed_code = await self._aask(prompt)
-        return fixed_code
+                     f"\n\n{error}\n\nPlease try to fix the error in this code."
+        return await self._aask(prompt)

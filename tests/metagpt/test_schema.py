@@ -18,4 +18,4 @@ def test_messages():
     ]
     text = str(msgs)
     roles = ['user', 'system', 'assistant', 'QA']
-    assert all([i in text for i in roles])
+    assert all(i in text for i in roles)
